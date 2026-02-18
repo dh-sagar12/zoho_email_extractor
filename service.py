@@ -213,3 +213,14 @@ class ZohoService:
         return {
             "total_messages": len(messages),
         }
+
+
+    def get_accounts(self) -> dict:
+        accounts_url = f"{self.base_url}/accounts"
+        print(f"Fetching Accounts with URL: {accounts_url}")
+        res = requests.get(
+            accounts_url,
+            headers=self.headers,
+        )
+        response = res.json()
+        return response.get("data", [])

@@ -2,7 +2,25 @@ import json
 from datetime import UTC, datetime, timedelta
 import requests
 
-from constant import AUTH_BASE_URL, CLEINT_ID, CLIENT_SECRET
+from constant import (
+    AUTH_BASE_URL,
+    CLEINT_ID,
+    CLIENT_SECRET,
+)
+
+
+def get_logger(name):
+    import logging
+
+    logger = logging.getLogger(name)
+    logger.setLevel(logging.INFO)
+    handler = logging.StreamHandler()
+    formatter = logging.Formatter(
+        "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+    )
+    handler.setFormatter(formatter)
+    logger.addHandler(handler)
+    return logger
 
 
 def get_access_token():
@@ -23,16 +41,12 @@ def get_access_token():
                 return None
 
 
-
-
 def get_refresh_token():
     with open("response.json", "r") as response:
         data = response.read()
         parsed_data = json.loads(data)
         print(parsed_data.get("refresh_token"), "refresh_token")
         return parsed_data.get("refresh_token")
-
-
 
 
 def renew_access_token():
@@ -70,11 +84,11 @@ def renew_access_token():
             f.write(json.dumps(parsed_data))
             f.truncate()
         return new_data
-    
-    
+
 
 from bs4 import BeautifulSoup
 import re
+
 
 def extract_main_email(html_content: str) -> str:
     soup = BeautifulSoup(html_content, "html.parser")

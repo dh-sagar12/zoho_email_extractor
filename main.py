@@ -13,9 +13,15 @@ from constant import (
 )
 from datetime import UTC, datetime, timedelta
 
-from router import router as zoho_router
+from routes import router as zoho_router
+from utils import get_logger
 
-app = FastAPI(title="Redirect API", version="1.0.0")
+logger = get_logger(__name__)
+
+app = FastAPI(
+    title="Redirect API",
+    version="1.0.0",
+)
 
 # Add CORS middleware
 app.add_middleware(
@@ -26,6 +32,7 @@ app.add_middleware(
     allow_headers=["*"],  # Allows all headers
 )
 app.include_router(zoho_router)
+
 
 @app.get("/redirect")
 async def redirect():
@@ -50,6 +57,9 @@ async def oauth_callback(request: Request):
     try:
         token_response = get_tokens(code)
     except Exception as e:
+        logger.exception(
+            f"Error getting tokens: {str(e)}",
+        )
         raise HTTPException(status_code=500, detail=str(e))
 
     access_token = token_response.get("access_token")
@@ -69,7 +79,9 @@ def get_tokens(code: str):
     Get access token from Zoho and save to response.json
     """
     url = f"{AUTH_BASE_URL}/oauth/v2/token"
-    headers = {"Content-Type": "application/x-www-form-urlencoded"}
+    headers = {
+        "Content-Type": "application/x-www-form-urlencoded",
+    }
     data = {
         "code": code,
         "client_id": CLEINT_ID,
