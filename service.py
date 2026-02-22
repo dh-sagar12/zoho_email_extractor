@@ -65,7 +65,11 @@ class ZohoService:
         return messages
 
     def _save_to_json(self, messages: List, file_name: str = "messages.json"):
-        with open(file_name, "a+") as f:
+        with open(
+            file_name,
+            "a+",
+            errors="surrogatepass",
+        ) as f:
             print("Saving messages to file...")
             import os
 
@@ -140,12 +144,13 @@ class ZohoService:
             return main_email
 
     def append_content_and_attachments(self) -> dict:
-        with open("messages.json", "r") as f:
+        with open("messages.json", "r", encoding="utf-8", errors="surrogatepass") as f:
             messages = json.load(f)
 
         print("Loading Messages from file... Total Messages: ", len(messages))
         messages_with_content = []
         total_messages = len(messages)
+        processed_messages =  0
         loop_count = 0
         for message in messages:
             message_id = message.get("messageId")
@@ -162,7 +167,8 @@ class ZohoService:
                 message["attachments"] = attachments
             messages_with_content.append(message)
             loop_count += 1
-            if loop_count == 100 or loop_count == total_messages:
+            processed_messages += 1
+            if loop_count == 100 or processed_messages == total_messages:
                 self._save_to_json(
                     messages=messages_with_content,
                     file_name="messages_with_content.json",
@@ -208,12 +214,11 @@ class ZohoService:
         return attachment_urls
 
     def get_stats(self) -> dict:
-        with open("messages.json", "r") as f:
+        with open("messages.json", "r", encoding="utf-8", errors="surrogatepass") as f:
             messages = json.load(f)
         return {
             "total_messages": len(messages),
         }
-
 
     def get_accounts(self) -> dict:
         accounts_url = f"{self.base_url}/accounts"
