@@ -27,6 +27,7 @@ wheels/
 response.json
 messages_with_content.json
 new_bak/
+*.json
 
 # IDE
 .vscode/

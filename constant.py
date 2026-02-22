@@ -4,11 +4,13 @@
 # CLEINT_ID = "1000.FXQKEDT5MQ082UW1RDUBVSZ4L96K6D"
 # CLIENT_SECRET = "fe2153c3ddf8a51b72b89900b08c3db06f3443e548"
 
-
+import os 
+from dotenv import load_dotenv
+load_dotenv()
 # for reservation.everest@mountainlodgesofnepal.com
-ACCOUNT_ID ="7285461000000008002"
-CLEINT_ID = "1000.N5HJ3LQWD7C4CHIA9Z01KYU3U8JLQO"
-CLIENT_SECRET = "e1f0d23b1bc910eb600bb69990f7a6ac51a55daa4c"
+ACCOUNT_ID = os.getenv("ACCOUNT_ID")
+CLEINT_ID = os.getenv("CLIENT_ID")
+CLIENT_SECRET = os.getenv("CLIENT_SECRET")
 
 
 REDIRECT_URI = "http://localhost:8000/oauth"
